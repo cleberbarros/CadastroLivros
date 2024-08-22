@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AssuntoDTO {
 
-    private Long codAs;
+    private Long id;
     private String descricao;
 }
 

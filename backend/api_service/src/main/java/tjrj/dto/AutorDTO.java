@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class AutorDTO {
 
-    private Long codAu;
+    private Long id;
     private String nome;
 }

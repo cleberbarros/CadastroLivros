@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,28 +32,14 @@ public class Livro {
     @Column(nullable = false, length = 4)
     private String anopublicacao;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "Livro_Autor",
             joinColumns = @JoinColumn(name = "livro_codl"),
             inverseJoinColumns = @JoinColumn(name = "autor_codau")
     )
-    private Set<Autor> autores;
+    private List<Autor> autores = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "Livro_Assunto",
-            joinColumns = @JoinColumn(name = "livro_codl"),
-            inverseJoinColumns = @JoinColumn(name = "assunto_codas")
-    )
-    private Set<Assunto> assuntos;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Livro_FormatoVenda",
-            joinColumns = @JoinColumn(name = "livro_codl"),
-            inverseJoinColumns = @JoinColumn(name = "venda_codve")
-    )
-    private Set<FormatoVenda> formatosVenda;
 
 }

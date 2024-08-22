@@ -22,6 +22,4 @@ public class Assunto {
     @Column(nullable = false, length = 20)
     private String descricao;
 
-    @ManyToMany(mappedBy = "assuntos")
-    private Set<Livro> livros;
 }
