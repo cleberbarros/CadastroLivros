@@ -14,7 +14,8 @@ public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codl;
+    @Column(name = "codl")
+    private Long id;
 
     @Column(nullable = false, length = 40)
     private String titulo;
@@ -26,7 +27,7 @@ public class Livro {
     private int edicao;
 
     @Column(nullable = false, length = 4)
-    private String anoPublicacao;
+    private String anopublicacao;
 
     @ManyToMany
     @JoinTable(

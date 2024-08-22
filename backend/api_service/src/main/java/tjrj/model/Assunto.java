@@ -16,7 +16,8 @@ public class Assunto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codAs;
+    @Column(name = "codas")
+    private Long id;
 
     @Column(nullable = false, length = 20)
     private String descricao;

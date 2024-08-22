@@ -14,7 +14,8 @@ public class Autor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codAu;
+    @Column(name = "codau")
+    private Long id;
 
     @Column(nullable = false, length = 40)
     private String nome;

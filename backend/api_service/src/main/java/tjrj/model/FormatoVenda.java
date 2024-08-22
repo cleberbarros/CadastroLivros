@@ -16,7 +16,8 @@ public class FormatoVenda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codVe;
+    @Column(name = "codve")
+    private Long id;
 
     @Column(nullable = false, length = 20)
     private String descricao;
