@@ -9,7 +9,9 @@ import tjrj.dto.AutorDTO;
 import tjrj.model.Autor;
 import tjrj.repository.AutorRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,13 @@ public class AutorService {
 
     public Optional<AutorDTO> buscarPorId(Long id) {
         return autorRepository.findById(id).map(autor -> modelMapper.map(autor, AutorDTO.class));
+    }
+
+    public List<AutorDTO> buscarPorNome(String nome) {
+        List<Autor> autores = autorRepository.findByNomeContainingIgnoreCase(nome);
+        return autores.stream()
+                .map(autor -> modelMapper.map(autor, AutorDTO.class))
+                .collect(Collectors.toList());
     }
 
     public Optional<AutorDTO> atualizarAutor(Long id, AutorDTO autorDTO) {

@@ -4,7 +4,6 @@ import lombok.Data;
 import tjrj.model.Autor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class LivroDTO {
