@@ -41,12 +41,6 @@ public class LivroController {
         return ResponseEntity.ok(livros);
 
     }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<LivroDTO> buscarPorId(@PathVariable Long id) {
-//        Optional<LivroDTO> livroDTO = livroService.buscarPorId(id);
-//        return livroDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<LivroDTO> atualizarLivro(@PathVariable Long id, @RequestBody LivroDTO livroDTO) {

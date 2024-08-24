@@ -65,10 +65,6 @@ public class LivroService {
     }
 
 
-//    public Optional<LivroDTO> buscarPorId(Long id) {
-//        return livroRepository.findById(id).map(livro -> modelMapper.map(livro, LivroDTO.class));
-//    }
-
     public Optional<LivroDTO> atualizarLivro(Long id, LivroDTO livroDTO) {
         return livroRepository.findById(id).map(livroExistente -> {
             modelMapper.map(livroDTO, livroExistente);
