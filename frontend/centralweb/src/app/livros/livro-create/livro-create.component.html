@@ -49,16 +49,49 @@
     <input type="text"
            matInput
            [formControl]="autorControl"
-           [matAutocomplete]="auto"
+           [matAutocomplete]="autoAutor"
            (input)="onAutorInput($event)">
     
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAutorName" (optionSelected)="addAutor($event)">
+    <mat-autocomplete #autoAutor="matAutocomplete" [displayWith]="displayAutorName" (optionSelected)="addAutor($event)">
       <mat-option *ngFor="let autor of autoresFiltrados | async" [value]="autor">
         {{ autor.nome }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
   
+
+
+
+<!-- Assuntos -->
+<div class="selected-assuntos" *ngIf="livroForm.get('assuntos')?.value?.length">
+  <h4>Assuntos Selecionados:</h4>
+  <mat-chip-list>
+    <mat-chip *ngFor="let assunto of livroForm.get('assuntos')?.value" (removed)="removeAssunto(assunto)">
+      {{ assunto.descricao }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+  </mat-chip-list>
+</div>
+
+<!-- Campo de pesquisa de Assuntos -->
+<h4>Selecionar Assunto(s):</h4>
+<mat-form-field class="full-width">
+  <input type="text"
+         matInput
+         [formControl]="assuntoControl"
+         [matAutocomplete]="autoAssunto"
+         (input)="onAssuntoInput($event)">
+  
+  <mat-autocomplete #autoAssunto="matAutocomplete" [displayWith]="displayAssuntoName" (optionSelected)="addAssunto($event)">
+    <mat-option *ngFor="let assunto of assuntosFiltrados | async" [value]="assunto">
+      {{ assunto.descricao }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+
+
+
   
 
 

@@ -3,6 +3,11 @@ export interface Autor{
   nome: string
 }
 
+export interface Assunto{
+  id: number,
+  descricao: string
+}
+
 export interface Livro {
   id: number;
   titulo: string;
@@ -10,6 +15,7 @@ export interface Livro {
   edicao: number;
   anoPublicacao: string;
   autores: Autor[];
+  assuntos: Assunto[];
 }
 
 export interface Pageable {

@@ -13,8 +13,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AutorDTO } from '../../shared/models/autor.model';
+import { AssuntoDTO } from '../../shared/models/assunto.model';
 import { startWith, map, switchMap } from 'rxjs/operators';
 import { AutorService } from '../../shared/services/autor.service';
+import { AssuntoService } from '../../shared/services/assunto.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete'; // Aqui deve estar o MatAutocompleteSelectedEvent
 import { Router } from '@angular/router';
 
@@ -41,10 +43,14 @@ import { Router } from '@angular/router';
 })
 export class LivroCreateComponent implements OnInit {
   livroForm: FormGroup;
-  autores: Livro[] = [];
+  
 
   autorControl = new FormControl('');
   autoresFiltrados!: Observable<AutorDTO[]>;
+
+
+  assuntoControl = new FormControl('');
+  assuntosFiltrados!: Observable<AssuntoDTO[]>;
 
 
   constructor(
@@ -54,6 +60,7 @@ export class LivroCreateComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackBar: MatSnackBar,
     private autorService: AutorService,
+    private assuntoService: AssuntoService,
     private router: Router
   ) {
     this.livroForm = this.fb.group({
@@ -63,6 +70,7 @@ export class LivroCreateComponent implements OnInit {
       edicao: ['', Validators.required],
       anoPublicacao: ['', Validators.required],
       autores: [[], Validators.required],
+      assuntos: [[], Validators.required],
 
     });
 
@@ -81,6 +89,13 @@ export class LivroCreateComponent implements OnInit {
       return of([]);
     }
     return this.autorService.buscarPorNome(value);
+  }
+
+  buscarAssuntos(value: string): Observable<AssuntoDTO[]> {
+    if (value.length < 3) {
+      return of([]);
+    }
+    return this.assuntoService.buscarPorDescricao(value);
   }
 
   onAutorInput(event: Event): void {
@@ -111,13 +126,46 @@ export class LivroCreateComponent implements OnInit {
   removeAutor(autorId: number): void {
     const autores = this.livroForm.get('autores')?.value;
     this.livroForm.get('autores')?.setValue(autores.filter((id: number) => id !== autorId));
+    console.log('autores-->',this.livroForm.get('autores'))
+  }
+
+
+  //Assuntos
+  onAssuntoInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+    this.assuntosFiltrados = this.buscarAssuntos(value);
+  }
+
+  displayAssuntoName(assunto?: AssuntoDTO): string {
+    return assunto ? assunto.descricao : '';
+  }
+
+  addAssunto(event: MatAutocompleteSelectedEvent): void {
+    const assuntoSelecionado = event.option.value;
+    const assuntos = this.livroForm.get('assuntos')?.value || [];
+
+    // Verifica se o assunto já foi adicionado
+    if (!assuntos.some((assunto: AssuntoDTO) => assunto.id === assuntoSelecionado.id)) {
+      assuntos.push(assuntoSelecionado);
+      this.livroForm.get('assuntos')?.setValue(assuntos);
+    }
+
+    // Limpa o campo de entrada para permitir a adição de mais autores
+    this.autorControl.setValue('');
+  }
+
+
+  removeAssunto(autorId: number): void {
+    const assuntos = this.livroForm.get('assuntos')?.value;
+    this.livroForm.get('assuntos')?.setValue(assuntos.filter((id: number) => id !== autorId));
+    console.log('assuntos-->',this.livroForm.get('assuntos'))
   }
 
   saveLivro(): void {
     if (this.livroForm.valid) {
       const newLivro = { ...this.livroForm.value, userId: this.data.userId };
       if (!this.data.id) {
-        console.log('newLivro', newLivro);
         this.livroService.createLivro(newLivro).subscribe({
           next: (livro) => {
             this.snackBar.open('Livro salvo com sucesso', 'Close', { duration: 3000 });
