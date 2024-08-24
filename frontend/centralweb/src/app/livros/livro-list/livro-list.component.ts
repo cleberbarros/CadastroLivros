@@ -19,6 +19,7 @@ import { LivroCreateComponent } from '../livro-create/livro-create.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../shared/services/auth.service';
 import { switchMap } from 'rxjs';
+import { AssuntoListComponent } from '../../assunto/assunto-list/assunto-list.component';
 
 @Component({
   standalone: true,
@@ -99,7 +100,14 @@ export class LivroListComponent implements OnInit {
         this.loadLivros(this.filter, this.currentPage, this.pageSize);
       });
     });
+  }
 
+  openAssuntosModal():void{
+    const dialogRef = this.dialog.open(AssuntoListComponent, {
+      width: '1000px',
+      height: '700px'
+      
+    });
   }
 
   openLivroDetails(livro: any): void {

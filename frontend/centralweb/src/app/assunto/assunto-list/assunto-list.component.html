@@ -1,0 +1,40 @@
+<mat-toolbar color="primary" class="toolbar-search">
+    <div class="balance-container"></div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Pesquise por ID ou Descrição</mat-label>
+        <input matInput [(ngModel)]="filter" (keyup)="onFilterChange($event)">
+        <mat-icon color="primary" matSuffix>buscar</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="new-assunto-btn-container">
+      <button mat-raised-button class="new-assunto-btn" (click)="openNewAssuntoModal()">
+        <mat-icon>add_circle_outline</mat-icon>
+        Novo Assunto
+      </button>
+    </div>
+  </mat-toolbar>
+  
+  <div class="assunto-list" *ngIf="assuntos.length > 0; else noAssuntos">
+    <mat-card class="assunto-card" *ngFor="let assunto of assuntos" (click)="openAssuntoDetails(assunto)">
+      <mat-card-header>
+        <mat-card-title class="cor-fonte">{{ assunto.descricao }}</mat-card-title>
+        <mat-card-subtitle class="cor-fonte">Assunto ID: {{ assunto.id }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions class="card-actions-end">
+        <button mat-icon-button color="warn" (click)="deleteAssunto(assunto.id); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
+  <div class="pagination">
+    <mat-paginator [length]="totalAssuntos" [pageSize]="12" [pageSizeOptions]="[8, 12, 24]" (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+  
+  <ng-template #noAssuntos>
+    <h1 class="no-assuntos">Você ainda não tem Assuntos.</h1>
+  </ng-template>
+  

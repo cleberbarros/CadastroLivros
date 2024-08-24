@@ -204,36 +204,6 @@ export class LivroCreateComponent implements OnInit {
     
   }
 
- /* saveLivro(): void {
-    if (this.livroForm.valid) {
-      const newLivro = { ...this.livroForm.value, userId: this.data.userId };
-      if (!this.data.id) {
-        this.livroService.createLivro(newLivro).subscribe({
-          next: (livro) => {
-            this.snackBar.open('Livro salvo com sucesso', 'Close', { duration: 3000 });
-            this.dialogRef.close(livro);
-          },
-          error: (error) => {
-            console.error('Contem erro', error);
-            this.snackBar.open('Erro ao salvar livro', 'Close', { duration: 3000 });
-          }
-        });
-      } else {
-        this.livroService.updateLivro(this.data.id, newLivro).subscribe({
-          next: (livro) => {
-            this.snackBar.open('Livro alterado com sucesso', 'Close', { duration: 3000 });
-            this.router.navigateByUrl('/');
-            this.dialogRef.close(livro);
-          },
-          error: (error) => {
-            console.error('Erro ao atualizar livro', error);
-            this.snackBar.open('Erro ao atualizar livro', 'Close', { duration: 3000 });
-          }
-        });
-      }
-    }
-  }*/
-
     saveLivro(): void {
       if (this.livroForm.valid) {
         const newLivro = { ...this.livroForm.value, userId: this.data.userId };
