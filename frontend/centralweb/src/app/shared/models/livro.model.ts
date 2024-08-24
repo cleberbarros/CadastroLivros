@@ -8,6 +8,11 @@ export interface Assunto{
   descricao: string
 }
 
+export interface Venda{
+  id: number,
+  descricao: string
+}
+
 export interface Livro {
   id: number;
   titulo: string;
@@ -16,6 +21,7 @@ export interface Livro {
   anoPublicacao: string;
   autores: Autor[];
   assuntos: Assunto[];
+  formatosVendas: Venda[];
 }
 
 export interface Pageable {

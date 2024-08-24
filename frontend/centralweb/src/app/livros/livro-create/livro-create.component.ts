@@ -14,9 +14,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AutorDTO } from '../../shared/models/autor.model';
 import { AssuntoDTO } from '../../shared/models/assunto.model';
+import { VendaDTO } from '../../shared/models/venda.model';
 import { startWith, map, switchMap } from 'rxjs/operators';
 import { AutorService } from '../../shared/services/autor.service';
 import { AssuntoService } from '../../shared/services/assunto.service';
+import { VendaService } from '../../shared/services/venda.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete'; // Aqui deve estar o MatAutocompleteSelectedEvent
 import { Router } from '@angular/router';
 
@@ -53,6 +55,10 @@ export class LivroCreateComponent implements OnInit {
   assuntosFiltrados!: Observable<AssuntoDTO[]>;
 
 
+  vendaControl = new FormControl('');
+  vendasFiltrados!: Observable<VendaDTO[]>;
+
+
   constructor(
     private fb: FormBuilder,
     private livroService: LivroService,
@@ -61,6 +67,7 @@ export class LivroCreateComponent implements OnInit {
     private snackBar: MatSnackBar,
     private autorService: AutorService,
     private assuntoService: AssuntoService,
+    private vendaService: VendaService,
     private router: Router
   ) {
     this.livroForm = this.fb.group({
@@ -71,6 +78,7 @@ export class LivroCreateComponent implements OnInit {
       anoPublicacao: ['', Validators.required],
       autores: [[], Validators.required],
       assuntos: [[], Validators.required],
+      formatosVendas: [[], Validators.required],
 
     });
 
@@ -96,6 +104,13 @@ export class LivroCreateComponent implements OnInit {
       return of([]);
     }
     return this.assuntoService.buscarPorDescricao(value);
+  }
+
+  buscarVendas(value: string): Observable<VendaDTO[]> {
+    if (value.length < 3) {
+      return of([]);
+    }
+    return this.vendaService.buscarPorDescricao(value);
   }
 
   onAutorInput(event: Event): void {
@@ -154,12 +169,41 @@ export class LivroCreateComponent implements OnInit {
     // Limpa o campo de entrada para permitir a adição de mais autores
     this.autorControl.setValue('');
   }
-
-
   removeAssunto(autorId: number): void {
     const assuntos = this.livroForm.get('assuntos')?.value;
     this.livroForm.get('assuntos')?.setValue(assuntos.filter((id: number) => id !== autorId));
     console.log('assuntos-->',this.livroForm.get('assuntos'))
+  }
+
+
+  //Formatos de Vendas
+  onVendaInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+    this.vendasFiltrados = this.buscarVendas(value);
+  }
+
+  displayVendaName(venda?: VendaDTO): string {
+    return venda ? venda.descricao : '';
+  }
+
+  addVenda(event: MatAutocompleteSelectedEvent): void {
+    const vendaSelecionado = event.option.value;
+    const vendas = this.livroForm.get('formatosVendas')?.value || [];
+
+    if (!vendas.some((venda: VendaDTO) => venda.id === vendaSelecionado.id)) {
+      vendas.push(vendaSelecionado);
+      this.livroForm.get('formatosVendas')?.setValue(vendas);
+    }
+
+    this.vendaControl.setValue('');
+  }
+
+
+  removeVenda(vendaId: number): void {
+    const assuntos = this.livroForm.get('formatosVendas')?.value;
+    this.livroForm.get('formatosVendas')?.setValue(assuntos.filter((id: number) => id !== vendaId));
+    
   }
 
   saveLivro(): void {
