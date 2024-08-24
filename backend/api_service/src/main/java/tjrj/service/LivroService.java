@@ -48,11 +48,11 @@ public class LivroService {
                     .map(autorDTO -> modelMapper.map(autorDTO, Autor.class))
                     .collect(Collectors.toList()));
 
-//            // Atualizar a lista de assuntos
-//            livroExistente.getAssuntos().clear();
-//            livroExistente.getAssuntos().addAll(livroDTO.getAssuntos().stream()
-//                    .map(assuntoDTO -> modelMapper.map(assuntoDTO, Assunto.class))
-//                    .collect(Collectors.toList()));
+            // Atualizar a lista de assuntos
+            livroExistente.getAssuntos().clear();
+            livroExistente.getAssuntos().addAll(livroDTO.getAssuntos().stream()
+                    .map(assuntoDTO -> modelMapper.map(assuntoDTO, Assunto.class))
+                    .collect(Collectors.toList()));
 //
 //            // Atualizar a lista de formatos de venda
 //            livroExistente.getFormatosVendas().clear();
