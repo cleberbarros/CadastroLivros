@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService))
-                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("http://localhost:4200/ticketlist")))
+                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("http://localhost:4200/livrolist")))
                 .logout(logout -> logout
                         .logoutSuccessHandler((HttpServletRequest request, HttpServletResponse response,
                                 Authentication authentication) -> {

@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>{{data.id ? 'View Livro' : 'New Livro'}}</h2>
+<mat-dialog-content [formGroup]="livroForm">
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>ID</mat-label>
+    <input matInput [value]="data.id ? data.id : 'N/A'" disabled>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Titulo</mat-label>
+    <textarea matInput formControlName="titulo" [disabled]="data.id !== undefined" rows="1" maxlength="40"></textarea>
+    <mat-hint align="end">{{livroForm.get('titulo')?.value?.length ?? 0}} / 40</mat-hint>
+  </mat-form-field>
+
+
+  
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Editora</mat-label>
+    <textarea matInput formControlName="editora" [disabled]="data.id !== undefined" rows="1" maxlength="40"></textarea>
+    <mat-hint align="end">{{livroForm.get('editora')?.value?.length ?? 0}} / 40</mat-hint>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill" class="full-width" >
+    <mat-label>Edição</mat-label>
+    <input matInput formControlName="edicao" [disabled]="data.id !== undefined">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width" >
+    <mat-label>Ano Publicação</mat-label>
+    <input matInput formControlName="anoPublicacao" [disabled]="data.id !== undefined">
+  </mat-form-field>
+
+
+
+
+
+  <!-- Autores -->
+  <div class="selected-authors" *ngIf="livroForm.get('autores')?.value?.length">
+    <h4>Autores Selecionados:</h4>
+    <mat-chip-list>
+      <mat-chip *ngFor="let autor of livroForm.get('autores')?.value" (removed)="removeAutor(autor)">
+        {{ autor.nome }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <!-- Campo de pesquisa de autores -->
+  <h4>Selecionar Autor(es):</h4>
+  <mat-form-field class="full-width">
+    <input type="text"
+           matInput
+           [formControl]="autorControl"
+           [matAutocomplete]="auto"
+           (input)="onAutorInput($event)">
+    
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAutorName" (optionSelected)="addAutor($event)">
+      <mat-option *ngFor="let autor of autoresFiltrados | async" [value]="autor">
+        {{ autor.nome }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  
+  
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="actions-end">
+  <button mat-button mat-dialog-close>
+    <mat-icon>cancel</mat-icon> Cancel
+  </button>
+  <button mat-button *ngIf="!data.id" (click)="saveLivro()" [disabled]="!livroForm.valid">
+    <mat-icon>save</mat-icon> Save
+  </button>
+</mat-dialog-actions>

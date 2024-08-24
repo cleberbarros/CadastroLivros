@@ -1,0 +1,58 @@
+<mat-toolbar color="primary" class="toolbar-search">
+  <div class="balance-container"></div>
+
+  <div class="search-container">
+    <mat-form-field appearance="fill" class="search-field">
+      <mat-label>Pesquise por ID ou Assunto</mat-label>
+      <input matInput [(ngModel)]="filter" (keyup)="onFilterChange($event)">
+      <mat-icon color="primary" matSuffix>buscar</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="new-livro-btn-container">
+    <button mat-raised-button class="new-livro-btn" (click)="openNewLivroModal()">
+      <mat-icon>add_circle_outline</mat-icon>
+      Novo Livro
+    </button>
+  </div>
+</mat-toolbar>
+
+<div class="livro-list" *ngIf="livros.length > 0; else noLivros">
+  <mat-card class="livro-card" *ngFor="let livro of livros" (click)="openLivroDetails(livro)">
+    <div class="ano-label">
+      {{ livro.anoPublicacao }}
+    </div>
+    <mat-card-header>
+      <mat-card-title class="cor-fonte">{{ livro.titulo }}</mat-card-title>
+      <mat-card-subtitle class="cor-fonte">Livro ID: {{ livro.id }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Editora: {{ livro.editora }}</p>
+    </mat-card-content>
+    <mat-card-content>
+      <p>Autor(es): 
+        <span *ngFor="let autor of livro.autores; let last = last">
+          {{ autor.nome }}<span *ngIf="!last">, </span>
+        </span>
+      </p>
+    </mat-card-content>
+    <mat-card-actions class="card-actions-end">
+      <button mat-icon-button (click)="editLivro(livro); $event.stopPropagation()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteLivro(livro.id); $event.stopPropagation()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+
+<div class="pagination">
+  <mat-paginator [length]="totalLivros" [pageSize]="12" [pageSizeOptions]="[8, 12, 24]" (page)="onPageChange($event)">
+  </mat-paginator>
+</div>
+
+<ng-template #noLivros>
+  <h1 class="no-livros">Você ainda não tem Livros.</h1>
+</ng-template>
