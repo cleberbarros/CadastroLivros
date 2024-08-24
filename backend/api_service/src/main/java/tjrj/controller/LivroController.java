@@ -70,8 +70,6 @@ public class LivroController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(bytesPdf);
-
-
     }
 
 }

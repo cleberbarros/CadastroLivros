@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Livro, LivrosResponse } from '../models/livro.model';
 import { environment } from '../../../../environment';
 import { AutorDTO } from '../../shared/models/autor.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,7 @@ export class LivroService {
   
   private apiUrl = `${environment.apiUrl}/livros`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private snackBar: MatSnackBar) { }
 
   getLivros(filter?: string, page: number = 0, size: number = 10): Observable<LivrosResponse> {
     let params = new HttpParams()
@@ -45,5 +48,22 @@ export class LivroService {
         withCredentials: true
       });
     }
+
+    private handleError(error: HttpErrorResponse): Observable<never> {
+      let errorMessage = 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.';
+      
+      if (error.error instanceof ErrorEvent) {
+          errorMessage = `Ocorreu um erro: ${error.error.message}`;
+      } else {
+          if (error.error && error.error.message) {
+              errorMessage = error.error.message; 
+          } else {
+              errorMessage = `Erro: ${error.statusText}. Por favor, tente novamente mais tarde.`;
+          }
+      }
+  
+      return throwError(() => new Error(errorMessage));
+  }
+  
 
 }

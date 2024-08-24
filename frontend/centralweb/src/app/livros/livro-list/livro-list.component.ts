@@ -141,20 +141,21 @@ export class LivroListComponent implements OnInit {
     });
   }
 
-  deleteLivro(id: number): void {
-    if (confirm('Tem certeza que deseja excluir este livro?')) {
-      this.livroService.deleteLivro(id).subscribe({
-        next: () => {
-          this.snackBar.open('Livro excluído com sucesso', 'Close', { duration: 3000 });
-          this.loadLivros( this.filter, this.currentPage, this.pageSize);
-        },
-        error: (error) => {
-          console.error('Erro ao excluir livro', error);
-          this.snackBar.open('Erro ao excluir livro', 'Close', { duration: 3000 });
+      deleteLivro(id: number): void {
+        if (confirm('Tem certeza que deseja excluir este livro?')) {
+          this.livroService.deleteLivro(id).subscribe({
+            next: () => {
+              this.snackBar.open('Livro excluído com sucesso', 'Fechar', { duration: 3000 });
+              this.loadLivros(this.filter, this.currentPage, this.pageSize);
+            },
+            error: (error) => {
+              const errorMessage = error.error || 'Erro ao excluir livro. Por favor, tente novamente mais tarde.';
+              this.snackBar.open(errorMessage, 'Fechar', { duration: 5000 });
+            }
+          });
         }
-      });
-    }
-  }
+      }
+      
 
   livrosRelatorio(): void {
     this.livroService.downloadLivrosRelatorio().subscribe({

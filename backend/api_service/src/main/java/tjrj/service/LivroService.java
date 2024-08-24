@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tjrj.dto.LivroDTO;
 import tjrj.exception.ReportException;
+import tjrj.exception.ResourceNotFoundException;
 import tjrj.model.Assunto;
 import tjrj.model.Autor;
 import tjrj.model.Livro;
@@ -93,12 +94,18 @@ public class LivroService {
         });
     }
 
-    public boolean deletarLivro(Long id) {
-        return livroRepository.findById(id).map(livro -> {
-            livroRepository.delete(livro);
-            return true;
-        }).orElse(false);
-    }
+//    public boolean deletarLivro(Long id) {
+//        return livroRepository.findById(id).map(livro -> {
+//            livroRepository.delete(livro);
+//            return true;
+//        }).orElse(false);
+//    }
+public boolean deletarLivro(Long id) {
+    Livro livro = livroRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Livro com ID " + id + " não encontrado."));
+    livroRepository.delete(livro);
+    return true;
+}
 
     public byte[] livrosDetalhes()  {
         try {
