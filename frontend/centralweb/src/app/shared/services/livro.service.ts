@@ -38,4 +38,12 @@ export class LivroService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
+    // Novo método para download do relatório em PDF
+    downloadLivrosRelatorio(): Observable<Blob> {
+      return this.http.get(`${this.apiUrl}/livros-detalhados`, {
+        responseType: 'blob',
+        withCredentials: true
+      });
+    }
+
 }

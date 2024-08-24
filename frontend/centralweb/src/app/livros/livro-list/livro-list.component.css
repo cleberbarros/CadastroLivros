@@ -16,11 +16,18 @@
   flex: 1;
 }
 
-.new-livro-btn-container {
-  margin-right: 16px;
+.report-btn {
+  background-color: #ff5722; 
 }
 
-.new-livro-btn {
+
+.new-livro-btn-container {
+  display: flex;
+  gap: 20px; /* Adiciona espaçamento entre os botões */
+  align-items: center;
+}
+
+.new-livro-btn, .report-btn {
   background-color: #ffffff;
   color: #1976d2;
   border-radius: 25px;

@@ -14,7 +14,11 @@
       <mat-icon>add_circle_outline</mat-icon>
       Novo Livro
     </button>
-  </div>
+    <button mat-raised-button class="report-btn" (click)="livrosRelatorio()">
+      <mat-icon>assessment</mat-icon>
+      Relatório Livros
+    </button>
+</div>
 </mat-toolbar>
 
 <div class="livro-list" *ngIf="livros.length > 0; else noLivros">
