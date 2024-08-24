@@ -1,19 +1,18 @@
 package tjrj.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tjrj.dto.LivroDTO;
-import tjrj.model.VwLivrosDetalhes;
 import tjrj.service.LivroService;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -31,9 +30,16 @@ public class LivroController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<LivroDTO>> buscarTodos(@ParameterObject @PageableDefault(size = 10) Pageable pageable) {
-        Page<LivroDTO> livros = livroService.buscarTodos(pageable);
+    public ResponseEntity<Page<LivroDTO>> buscarTodos(@RequestParam(required = false) String filter,
+                                                      @ParameterObject
+                                                      @Parameter(description = "Paginação e ordenação",
+                                                              schema = @Schema(implementation = Pageable.class,
+                                                                      example = "{\"page\": 0, \"size\": 1, \"sort\": [\"titulo,asc\"]}"))
+                                                      @PageableDefault Pageable pageable){
+
+        Page<LivroDTO> livros = livroService.buscarComFiltro(filter, pageable);
         return ResponseEntity.ok(livros);
+
     }
 
     @GetMapping("/{id}")

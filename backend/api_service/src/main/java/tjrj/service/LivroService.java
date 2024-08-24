@@ -1,25 +1,24 @@
 package tjrj.service;
 
 import lombok.RequiredArgsConstructor;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tjrj.dto.LivroDTO;
 import tjrj.exception.ReportException;
-import tjrj.model.*;
+import tjrj.model.Assunto;
+import tjrj.model.Autor;
+import tjrj.model.Livro;
+import tjrj.model.Venda;
 import tjrj.repository.LivroRepository;
 import tjrj.repository.VwLivrosDetalhesRepository;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -35,11 +34,33 @@ public class LivroService {
         Livro livroSalvo = livroRepository.save(modelMapper.map(livroDto, Livro.class));
         return modelMapper.map(livroSalvo, LivroDTO.class);
     }
+    public Page<LivroDTO> buscarComFiltro(String filter, Pageable pageable) {
 
-    public Page<LivroDTO> buscarTodos(Pageable pageable) {
-        return livroRepository.findAll(pageable)
-                .map(livro -> modelMapper.map(livro, LivroDTO.class));
+        if (filter != null && filter.matches("\\d+")) {
+            Long livroId = Long.parseLong(filter);
+            Optional<Livro> livro = livroRepository.findById(livroId);
+            List<Livro> livroList = livro.map(Collections::singletonList).orElseGet(Collections::emptyList);
+
+
+            List<LivroDTO> livroDTOList = livroList.stream()
+                    .map(livroItem -> modelMapper.map(livroItem, LivroDTO.class))
+                    .collect(Collectors.toList());
+
+
+            return new PageImpl<>(livroDTOList, pageable, livroDTOList.size());
+        } else if (filter != null) {
+            Page<Livro> livros = livroRepository.findByDescriptionContaining(filter, pageable);
+
+
+            return livros.map(livro -> modelMapper.map(livro, LivroDTO.class));
+        } else {
+            Page<Livro> livros = livroRepository.findByDescriptionContaining("", pageable);
+
+
+            return livros.map(livro -> modelMapper.map(livro, LivroDTO.class));
+        }
     }
+
 
     public Optional<LivroDTO> buscarPorId(Long id) {
         return livroRepository.findById(id).map(livro -> modelMapper.map(livro, LivroDTO.class));
