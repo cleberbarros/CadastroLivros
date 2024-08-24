@@ -38,7 +38,7 @@ public class AssuntoController {
 
     @GetMapping("/buscar-por-descricao/{descricao}")
     public ResponseEntity<List<AssuntoDTO>> buscarPorNome(@PathVariable String descricao) {
-        List<AssuntoDTO> assuntos = assuntoService.buscarPorDescricao(descricao);
+                List<AssuntoDTO> assuntos = assuntoService.buscarPorDescricao(descricao);
         return assuntos.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(assuntos);
     }
 

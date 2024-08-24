@@ -39,7 +39,7 @@ public class AssuntoService {
     public List<AssuntoDTO> buscarPorDescricao(String descricao) {
         List<Assunto> assuntos = assuntoRepository.findByDescricaoContainingIgnoreCase(descricao);
         return assuntos.stream()
-                .map(autor -> modelMapper.map(assuntos, AssuntoDTO.class))
+                .map(assunto -> modelMapper.map(assunto, AssuntoDTO.class))
                 .collect(Collectors.toList());
     }
 
