@@ -102,8 +102,6 @@ export class LivroListComponent implements OnInit {
 
   }
 
-
-
   openLivroDetails(livro: any): void {
     this.dialog.open(LivroCreateComponent, {
       width: '1000px',
