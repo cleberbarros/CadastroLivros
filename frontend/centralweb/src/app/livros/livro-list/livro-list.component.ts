@@ -53,7 +53,7 @@ export class LivroListComponent implements OnInit {
     private authService: AuthService,
     private cd: ChangeDetectorRef,
     public dialog: MatDialog,
-    
+
     private snackBar: MatSnackBar,) { }
 
   ngOnInit() {
@@ -67,7 +67,7 @@ export class LivroListComponent implements OnInit {
       this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
 
       if (this.userInfo.roles.includes('MANAGER')) {
-  
+
       }
     });
   }
@@ -77,7 +77,7 @@ export class LivroListComponent implements OnInit {
       this.livros = response.content;
       this.totalLivros = response.totalElements;
       this.cd.detectChanges();
-     
+
     });
   }
 
@@ -94,11 +94,16 @@ export class LivroListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log("Dialog result:", result);
+
       this.route.paramMap.subscribe(params => {
         this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
       });
     });
+
   }
+
+
 
   openLivroDetails(livro: any): void {
     this.dialog.open(LivroCreateComponent, {
@@ -125,39 +130,35 @@ export class LivroListComponent implements OnInit {
 
 
 
-  
+
   editLivro(livro: Livro): void {
-    
+
     const dialogRef = this.dialog.open(LivroCreateComponent, {
       width: '1000px',
       data: livro
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
       }
     });
   }
-  
-  deleteLivro(livroId: number): void {
+
+  deleteLivro(id: number): void {
     if (confirm('Tem certeza que deseja excluir este livro?')) {
-     /* this.livroService.deleteLivro(livroId).subscribe({
+      this.livroService.deleteLivro(id).subscribe({
         next: () => {
-          this.snackBar.open('Livro excluído com sucesso', 'Fechar', {
-            duration: 3000,
-          });
+          this.snackBar.open('Livro excluído com sucesso', 'Close', { duration: 3000 });
           this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
         },
-        error: (err) => {
-          console.error('Erro ao excluir o livro', err);
-          this.snackBar.open('Erro ao excluir o livro', 'Fechar', {
-            duration: 3000,
-          });
+        error: (error) => {
+          console.error('Erro ao excluir livro', error);
+          this.snackBar.open('Erro ao excluir livro', 'Close', { duration: 3000 });
         }
-      });*/
+      });
     }
   }
-  
+
 
 }

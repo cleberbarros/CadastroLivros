@@ -16,9 +16,7 @@ import { AutorDTO } from '../../shared/models/autor.model';
 import { startWith, map, switchMap } from 'rxjs/operators';
 import { AutorService } from '../../shared/services/autor.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete'; // Aqui deve estar o MatAutocompleteSelectedEvent
-
-
-AutorService
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-livro-create',
@@ -36,39 +34,41 @@ AutorService
     CommonModule,
     MatChipsModule,
     MatAutocompleteModule
-    
+
   ],
   providers: [DatePipe],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // Adicione isto aqui
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LivroCreateComponent implements OnInit {
   livroForm: FormGroup;
   autores: Livro[] = [];
-  
+
   autorControl = new FormControl('');
   autoresFiltrados!: Observable<AutorDTO[]>;
 
-  
+
   constructor(
     private fb: FormBuilder,
     private livroService: LivroService,
     public dialogRef: MatDialogRef<LivroCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackBar: MatSnackBar,
-    private autorService: AutorService
+    private autorService: AutorService,
+    private router: Router
   ) {
     this.livroForm = this.fb.group({
+      id: [''],
       titulo: ['', Validators.required],
       editora: ['', Validators.required],
       edicao: ['', Validators.required],
       anoPublicacao: ['', Validators.required],
       autores: [[], Validators.required],
-     // autorControl: [''] 
+
     });
 
     if (this.data.id) {
       this.livroForm.patchValue(this.data);
-      this.livroForm.disable();
+      // this.livroForm.disable();
     }
   }
 
@@ -78,7 +78,7 @@ export class LivroCreateComponent implements OnInit {
 
   buscarAutores(value: string): Observable<AutorDTO[]> {
     if (value.length < 3) {
-      return of([]); 
+      return of([]);
     }
     return this.autorService.buscarPorNome(value);
   }
@@ -92,21 +92,21 @@ export class LivroCreateComponent implements OnInit {
   displayAutorName(autor?: AutorDTO): string {
     return autor ? autor.nome : '';
   }
-  
+
   addAutor(event: MatAutocompleteSelectedEvent): void {
     const autorSelecionado = event.option.value;
     const autores = this.livroForm.get('autores')?.value || [];
-  
+
     // Verifica se o autor já foi adicionado
     if (!autores.some((autor: AutorDTO) => autor.id === autorSelecionado.id)) {
       autores.push(autorSelecionado);
       this.livroForm.get('autores')?.setValue(autores);
     }
-  
+
     // Limpa o campo de entrada para permitir a adição de mais autores
     this.autorControl.setValue('');
   }
-  
+
 
   removeAutor(autorId: number): void {
     const autores = this.livroForm.get('autores')?.value;
@@ -116,18 +116,37 @@ export class LivroCreateComponent implements OnInit {
   saveLivro(): void {
     if (this.livroForm.valid) {
       const newLivro = { ...this.livroForm.value, userId: this.data.userId };
-      console.log('newLivro',newLivro);
-      this.livroService.createLivro(newLivro).subscribe({
-        next: (livro) => {
-          this.snackBar.open('Livro salvo com sucesso', 'Close', { duration: 3000 });
-          this.dialogRef.close(livro);
-        },
-        error: (error) => {
-          console.error('Contem erro', error);
-          this.snackBar.open('Erro ao salvar livro', 'Close', { duration: 3000 });
-        }
-      });
+      if (!this.data.id) {
+        console.log('newLivro', newLivro);
+        this.livroService.createLivro(newLivro).subscribe({
+          next: (livro) => {
+            this.snackBar.open('Livro salvo com sucesso', 'Close', { duration: 3000 });
+            this.dialogRef.close(livro);
+          },
+          error: (error) => {
+            console.error('Contem erro', error);
+            this.snackBar.open('Erro ao salvar livro', 'Close', { duration: 3000 });
+          }
+        });
+      } else {
+        this.livroService.updateLivro(this.data.id, newLivro).subscribe({
+          next: (livro) => {
+            this.snackBar.open('Livro alterado com sucesso', 'Close', { duration: 3000 });
+            this.router.navigateByUrl('/');
+            this.dialogRef.close(livro);
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar livro', error);
+            this.snackBar.open('Erro ao atualizar livro', 'Close', { duration: 3000 });
+          }
+        });
+      }
     }
   }
+
+
+
 }
+
+
 

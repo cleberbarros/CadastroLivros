@@ -32,9 +32,6 @@
   </mat-form-field>
 
 
-
-
-
   <!-- Autores -->
   <div class="selected-authors" *ngIf="livroForm.get('autores')?.value?.length">
     <h4>Autores Selecionados:</h4>
@@ -71,7 +68,8 @@
   <button mat-button mat-dialog-close>
     <mat-icon>cancel</mat-icon> Cancel
   </button>
-  <button mat-button *ngIf="!data.id" (click)="saveLivro()" [disabled]="!livroForm.valid">
+  <button mat-button (click)="saveLivro()" [disabled]="!livroForm.valid">
     <mat-icon>save</mat-icon> Save
   </button>
+  
 </mat-dialog-actions>
