@@ -8,27 +8,37 @@
 
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Titulo</mat-label>
-    <textarea matInput formControlName="titulo" [disabled]="data.id !== undefined" rows="1" maxlength="40"></textarea>
-    <mat-hint align="end">{{livroForm.get('titulo')?.value?.length ?? 0}} / 40</mat-hint>
+    <textarea matInput formControlName="titulo"></textarea>
+    <mat-hint align="end">{{titulo?.value?.length ?? 0}} / 40</mat-hint>
+    <mat-error *ngIf="titulo?.hasError('required')">O título é obrigatório.</mat-error>
+    <mat-error *ngIf="titulo?.hasError('maxlength')">O título não pode ter mais que 40 caracteres.</mat-error>
   </mat-form-field>
 
 
   
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Editora</mat-label>
-    <textarea matInput formControlName="editora" [disabled]="data.id !== undefined" rows="1" maxlength="40"></textarea>
-    <mat-hint align="end">{{livroForm.get('editora')?.value?.length ?? 0}} / 40</mat-hint>
+    <textarea matInput formControlName="editora"></textarea>
+    <mat-hint align="end">{{editora?.value?.length ?? 0}} / 40</mat-hint>
+    <mat-error *ngIf="editora?.hasError('required')">A editora é obrigatória.</mat-error>
+    <mat-error *ngIf="editora?.hasError('maxlength')">A editora não pode ter mais que 40 caracteres.</mat-error>
   </mat-form-field>
 
 
-  <mat-form-field appearance="fill" class="full-width" >
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Edição</mat-label>
-    <input matInput formControlName="edicao" [disabled]="data.id !== undefined">
+    <input matInput formControlName="edicao" type="number">
+    <mat-error *ngIf="edicao?.hasError('required')">A edição é obrigatória.</mat-error>
+    <mat-error *ngIf="edicao?.hasError('min')">A edição deve ser no mínimo 1.</mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width" >
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Ano Publicação</mat-label>
-    <input matInput formControlName="anoPublicacao" [disabled]="data.id !== undefined">
+    <input matInput formControlName="anoPublicacao">
+    <mat-error *ngIf="anoPublicacao?.hasError('required')">O ano de publicação é obrigatório.</mat-error>
+    <mat-error *ngIf="anoPublicacao?.hasError('minlength') || anoPublicacao?.hasError('maxlength')">
+      O ano de publicação deve ter 4 caracteres.
+    </mat-error>
   </mat-form-field>
 
 

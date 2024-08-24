@@ -72,19 +72,17 @@ export class LivroCreateComponent implements OnInit {
   ) {
     this.livroForm = this.fb.group({
       id: [''],
-      titulo: ['', Validators.required],
-      editora: ['', Validators.required],
-      edicao: ['', Validators.required],
-      anoPublicacao: ['', Validators.required],
+      titulo: ['', [Validators.required, Validators.maxLength(40)]],
+      editora: ['', [Validators.required, Validators.maxLength(40)]],
+      edicao: ['', [Validators.required, Validators.min(1)]],
+      anoPublicacao: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
       autores: [[], Validators.required],
       assuntos: [[], Validators.required],
       formatosVendas: [[], Validators.required],
-
     });
 
     if (this.data.id) {
       this.livroForm.patchValue(this.data);
-      // this.livroForm.disable();
     }
   }
 
@@ -206,7 +204,7 @@ export class LivroCreateComponent implements OnInit {
     
   }
 
-  saveLivro(): void {
+ /* saveLivro(): void {
     if (this.livroForm.valid) {
       const newLivro = { ...this.livroForm.value, userId: this.data.userId };
       if (!this.data.id) {
@@ -234,8 +232,42 @@ export class LivroCreateComponent implements OnInit {
         });
       }
     }
-  }
+  }*/
 
+    saveLivro(): void {
+      if (this.livroForm.valid) {
+        const newLivro = { ...this.livroForm.value, userId: this.data.userId };
+        if (!this.data.id) {
+          this.livroService.createLivro(newLivro).subscribe({
+            next: (livro) => {
+              this.snackBar.open('Livro salvo com sucesso', 'Close', { duration: 3000 });
+              this.dialogRef.close(livro);
+            },
+            error: (error) => {
+              this.snackBar.open(error.error.message || 'Erro ao salvar livro', 'Close', { duration: 3000 });
+            }
+          });
+        } else {
+          this.livroService.updateLivro(this.data.id, newLivro).subscribe({
+            next: (livro) => {
+              this.snackBar.open('Livro alterado com sucesso', 'Close', { duration: 3000 });
+              this.router.navigateByUrl('/');
+              this.dialogRef.close(livro);
+            },
+            error: (error) => {
+              this.snackBar.open(error.error.message || 'Erro ao atualizar livro', 'Close', { duration: 3000 });
+            }
+          });
+        }
+      } else {
+        this.snackBar.open('Por favor, corrija os erros no formulário.', 'Close', { duration: 3000 });
+      }
+    }
+  
+    get titulo() { return this.livroForm.get('titulo'); }
+    get editora() { return this.livroForm.get('editora'); }
+    get edicao() { return this.livroForm.get('edicao'); }
+    get anoPublicacao() { return this.livroForm.get('anoPublicacao'); }
 
 
 }
