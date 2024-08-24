@@ -1,18 +1,24 @@
 package tjrj.service;
 
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tjrj.dto.LivroDTO;
-import tjrj.model.Assunto;
-import tjrj.model.Autor;
-import tjrj.model.Livro;
-import tjrj.model.Venda;
+import tjrj.exception.ReportException;
+import tjrj.model.*;
 import tjrj.repository.LivroRepository;
+import tjrj.repository.VwLivrosDetalhesRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,6 +28,7 @@ import java.util.stream.Collectors;
 public class LivroService {
 
     private final LivroRepository livroRepository;
+    private final VwLivrosDetalhesRepository vwLivrosDetalhesRepository;
     private final ModelMapper modelMapper;
 
     public LivroDTO execute(LivroDTO livroDto) {
@@ -71,4 +78,19 @@ public class LivroService {
             return true;
         }).orElse(false);
     }
+
+    public byte[] livrosDetalhes()  {
+        try {
+            var inpustStream = this.getClass().getResourceAsStream("/relatorios/livros.jasper");
+            var livrosDetalhes = this.vwLivrosDetalhesRepository.findAll();
+            var dataSource = new JRBeanCollectionDataSource(livrosDetalhes);
+            var parametros = new HashMap<String, Object>();
+            parametros.put("REPORT_LOCALE", new Locale("pt","BR"));
+            var jasperPrint = JasperFillManager.fillReport(inpustStream,parametros,dataSource);
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e) {
+            throw new ReportException("Não foi possivel emitir relatório de livros",e);
+        }
+    }
+
 }

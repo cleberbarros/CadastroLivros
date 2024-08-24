@@ -5,11 +5,15 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tjrj.dto.LivroDTO;
+import tjrj.model.VwLivrosDetalhes;
 import tjrj.service.LivroService;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -51,6 +55,17 @@ public class LivroController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping(value = "livros-detalhados", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> livrosDetalhes(){
+        byte[] bytesPdf = this.livroService.livrosDetalhes();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(bytesPdf);
+
+
     }
 
 }
