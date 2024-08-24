@@ -39,5 +39,21 @@ public class Livro {
     private List<Autor> autores = new ArrayList<>();
 
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "Livro_Assunto",
+            joinColumns = @JoinColumn(name = "livro_codl"),
+            inverseJoinColumns = @JoinColumn(name = "assunto_codas")
+    )
+    private List<Assunto> assuntos = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "livro_venda",
+            joinColumns = @JoinColumn(name = "livro_codl"),
+            inverseJoinColumns = @JoinColumn(name = "venda_codve")
+    )
+    private List<Venda> formatosVendas = new ArrayList<>();
+
 
 }

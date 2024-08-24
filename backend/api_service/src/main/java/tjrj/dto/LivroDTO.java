@@ -1,7 +1,9 @@
 package tjrj.dto;
 
 import lombok.Data;
+import tjrj.model.Assunto;
 import tjrj.model.Autor;
+import tjrj.model.Venda;
 
 import java.util.List;
 
@@ -14,5 +16,7 @@ public class LivroDTO {
     private Integer edicao;
     private String anoPublicacao;
     private List<Autor> autores;
+    private List<Assunto> assuntos;
+    private List<Venda>formatosVendas;
 
 }
