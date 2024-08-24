@@ -6,10 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tjrj.dto.AssuntoDTO;
+import tjrj.dto.VendaDTO;
 import tjrj.model.Assunto;
+import tjrj.model.Venda;
 import tjrj.repository.AssuntoRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,13 @@ public class AssuntoService {
 
     public Optional<AssuntoDTO> buscarPorId(Long id) {
         return assuntoRepository.findById(id).map(assunto -> modelMapper.map(assunto, AssuntoDTO.class));
+    }
+
+    public List<AssuntoDTO> buscarPorDescricao(String descricao) {
+        List<Assunto> assuntos = assuntoRepository.findByDescricaoContainingIgnoreCase(descricao);
+        return assuntos.stream()
+                .map(autor -> modelMapper.map(assuntos, AssuntoDTO.class))
+                .collect(Collectors.toList());
     }
 
     public Optional<AssuntoDTO> atualizarAssunto(Long id, AssuntoDTO assuntoDTO) {
