@@ -35,7 +35,7 @@ public class LivroController {
                                                       @Parameter(description = "Paginação e ordenação",
                                                               schema = @Schema(implementation = Pageable.class,
                                                                       example = "{\"page\": 0, \"size\": 1, \"sort\": [\"titulo,asc\"]}"))
-                                                      @PageableDefault Pageable pageable){
+                                                      @PageableDefault Pageable pageable) {
 
         Page<LivroDTO> livros = livroService.buscarComFiltro(filter, pageable);
         return ResponseEntity.ok(livros);
@@ -58,7 +58,7 @@ public class LivroController {
     }
 
     @GetMapping(value = "livros-detalhados", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> livrosDetalhes(){
+    public ResponseEntity<byte[]> livrosDetalhes() {
         byte[] bytesPdf = this.livroService.livrosDetalhes();
 
         return ResponseEntity.ok()

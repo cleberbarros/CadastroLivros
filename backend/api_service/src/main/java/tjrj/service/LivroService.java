@@ -44,22 +44,16 @@ public class LivroService {
             Optional<Livro> livro = livroRepository.findById(livroId);
             List<Livro> livroList = livro.map(Collections::singletonList).orElseGet(Collections::emptyList);
 
-
             List<LivroDTO> livroDTOList = livroList.stream()
                     .map(livroItem -> modelMapper.map(livroItem, LivroDTO.class))
                     .collect(Collectors.toList());
 
-
             return new PageImpl<>(livroDTOList, pageable, livroDTOList.size());
         } else if (filter != null) {
             Page<Livro> livros = livroRepository.findByDescriptionContaining(filter, pageable);
-
-
             return livros.map(livro -> modelMapper.map(livro, LivroDTO.class));
         } else {
             Page<Livro> livros = livroRepository.findByDescriptionContaining("", pageable);
-
-
             return livros.map(livro -> modelMapper.map(livro, LivroDTO.class));
         }
     }

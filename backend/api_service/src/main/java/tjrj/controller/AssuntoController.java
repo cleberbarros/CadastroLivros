@@ -1,16 +1,15 @@
 package tjrj.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import tjrj.dto.AssuntoDTO;
-import tjrj.dto.AutorDTO;
 import tjrj.service.AssuntoService;
 
 import java.util.List;
@@ -31,8 +30,14 @@ public class AssuntoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(@ParameterObject @PageableDefault(size = 10) Pageable pageable) {
-        Page<AssuntoDTO> assuntos = assuntoService.buscarTodos(pageable);
+    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(@RequestParam(required = false) String filter,
+                                                      @ParameterObject
+                                                      @Parameter(description = "Paginação e ordenação",
+                                                              schema = @Schema(implementation = Pageable.class,
+                                                                      example = "{\"page\": 0, \"size\": 1, \"sort\": [\"descricao,asc\"]}"))
+                                                      @PageableDefault Pageable pageable) {
+
+        Page<AssuntoDTO> assuntos = assuntoService.buscarComFiltro(filter, pageable);
         return ResponseEntity.ok(assuntos);
     }
 
@@ -40,12 +45,6 @@ public class AssuntoController {
     public ResponseEntity<List<AssuntoDTO>> buscarPorNome(@PathVariable String descricao) {
                 List<AssuntoDTO> assuntos = assuntoService.buscarPorDescricao(descricao);
         return assuntos.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(assuntos);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<AssuntoDTO> buscarPorId(@PathVariable Long id) {
-        Optional<AssuntoDTO> assuntoDTO = assuntoService.buscarPorId(id);
-        return assuntoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
