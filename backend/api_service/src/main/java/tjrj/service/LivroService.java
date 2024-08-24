@@ -1,6 +1,7 @@
 package tjrj.service;
 
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -19,6 +20,7 @@ import tjrj.model.Venda;
 import tjrj.repository.LivroRepository;
 import tjrj.repository.VwLivrosDetalhesRepository;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -116,6 +118,8 @@ public boolean deletarLivro(Long id) {
             parametros.put("REPORT_LOCALE", new Locale("pt","BR"));
             var jasperPrint = JasperFillManager.fillReport(inpustStream,parametros,dataSource);
             return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            throw new ReportException("Erro ao processar o relatório de livros. Tente novamente ou contate o suporte.", e);
         } catch (Exception e) {
             throw new ReportException("Não foi possivel emitir relatório de livros",e);
         }

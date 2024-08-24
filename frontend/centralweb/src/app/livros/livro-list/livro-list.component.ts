@@ -156,21 +156,21 @@ export class LivroListComponent implements OnInit {
         }
       }
       
-
-  livrosRelatorio(): void {
-    this.livroService.downloadLivrosRelatorio().subscribe({
-      next: (data: Blob) => {
-        const blob = new Blob([data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
-        setTimeout(() => window.URL.revokeObjectURL(url), 100);
-      },
-      error: (error) => {
-        console.error('Erro ao gerar relatório', error);
-        this.snackBar.open('Erro ao gerar relatório', 'Close', { duration: 3000 });
-      }
-    });
-  }
+    livrosRelatorio(): void {
+      this.livroService.downloadLivrosRelatorio().subscribe({
+        next: (data: Blob) => {
+          const blob = new Blob([data], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          setTimeout(() => window.URL.revokeObjectURL(url), 100);
+        },
+        error: (error) => {
+          const errorMessage = error.error || 'Erro ao gerar relatório. Por favor, tente novamente mais tarde.';
+          this.snackBar.open(errorMessage, 'Fechar', { duration: 5000 });
+        }
+      });
+    }
+    
       
 
 }
