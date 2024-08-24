@@ -42,18 +42,48 @@ CREATE TABLE Livro_Assunto (
     FOREIGN KEY (assunto_codas) REFERENCES Assunto (codas)
 );
 
-CREATE TABLE FormatoVenda (
+CREATE TABLE Venda (
     codve BIGSERIAL PRIMARY KEY,
     descricao VARCHAR(20) NOT NULL,
     valor NUMERIC(15,2)
 );
 
-CREATE TABLE Livro_FormatoVenda (
+CREATE TABLE Livro_Venda (
     livro_codl Integer NOT NULL,
     venda_codve Integer NOT NULL,
     FOREIGN KEY (livro_codl) REFERENCES Livro (codl),
-    FOREIGN KEY (venda_codve) REFERENCES FormatoVenda (codve)
+    FOREIGN KEY (venda_codve) REFERENCES Venda (codve)
 );
+
+--view para relatorio
+CREATE OR REPLACE VIEW vw_livros_detalhes AS
+SELECT 
+    l.codl AS livro_id,
+    l.titulo AS livro_titulo,
+    l.editora AS livro_editora,
+    l.edicao AS livro_edicao,
+    l.anopublicacao AS livro_anopublicacao,
+    COALESCE(STRING_AGG(DISTINCT a.nome, ', '), 'Sem Autor') AS autores,
+    COALESCE(STRING_AGG(DISTINCT ass.descricao, ', '), 'Sem Assunto') AS assuntos,
+    COALESCE(STRING_AGG(DISTINCT v.descricao || ' (R$' || v.valor || ')', ', '), 'Sem Venda') AS vendas
+FROM 
+    Livro l
+LEFT JOIN 
+    Livro_Autor la ON l.codl = la.livro_codl
+LEFT JOIN 
+    Autor a ON la.autor_codau = a.codau
+LEFT JOIN 
+    Livro_Assunto las ON l.codl = las.livro_codl
+LEFT JOIN 
+    Assunto ass ON las.assunto_codas = ass.codas
+LEFT JOIN 
+    Livro_Venda lv ON l.codl = lv.livro_codl
+LEFT JOIN 
+    Venda v ON lv.venda_codve = v.codve
+GROUP BY 
+    l.codl, l.titulo, l.editora, l.edicao, l.anopublicacao;
+
+
 
 -- Inserir usuários
 INSERT INTO users (name, email) VALUES ('Cleber Barros', 'cleberbarros.ti@gmail.com');
@@ -74,8 +104,8 @@ INSERT INTO Assunto (Descricao) VALUES ('Fantasia');
 INSERT INTO Assunto (Descricao) VALUES ('Aventura');
 
 -- Inserir Formatos de Venda
-INSERT INTO FormatoVenda (Descricao, Valor) VALUES ('Impresso', 49.90);
-INSERT INTO FormatoVenda (Descricao, Valor) VALUES ('E-book', 29.90);
+INSERT INTO Venda (Descricao, Valor) VALUES ('Impresso', 49.90);
+INSERT INTO Venda (Descricao, Valor) VALUES ('E-book', 29.90);
 
 -- Inserir Livros
 INSERT INTO Livro (Titulo, Editora, Edicao, AnoPublicacao) VALUES ('O Senhor dos Anéis', 'Martins Fontes', 1, '1954');
@@ -90,6 +120,7 @@ INSERT INTO Livro_Assunto (Livro_Codl, Assunto_CodAs) VALUES (1, 1); -- O Senhor
 INSERT INTO Livro_Assunto (Livro_Codl, Assunto_CodAs) VALUES (2, 2); -- A Guerra dos Tronos - Aventura
 
 -- Relacionar Livro com Formatos de Venda
-INSERT INTO Livro_FormatoVenda (Livro_Codl, Venda_CodVe) VALUES (1, 1); -- O Senhor dos Anéis - Impresso
-INSERT INTO Livro_FormatoVenda (Livro_Codl, Venda_CodVe) VALUES (2, 2); -- A Guerra dos Tronos - E-book
+INSERT INTO Livro_Venda (Livro_Codl, Venda_CodVe) VALUES (1, 1); -- O Senhor dos Anéis - Impresso
+INSERT INTO Livro_Venda (Livro_Codl, Venda_CodVe) VALUES (2, 2); -- A Guerra dos Tronos - E-book
 
+ 
