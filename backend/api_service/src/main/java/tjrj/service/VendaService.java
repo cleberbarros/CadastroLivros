@@ -38,7 +38,7 @@ public class VendaService {
     public List<VendaDTO> buscarPorDescricao(String descricao) {
         List<Venda> vendas = vendaRepository.findByDescricaoContainingIgnoreCase(descricao);
         return vendas.stream()
-                .map(autor -> modelMapper.map(vendas, VendaDTO.class))
+                .map(venda -> modelMapper.map(venda, VendaDTO.class))
                 .collect(Collectors.toList());
     }
 

@@ -53,13 +53,12 @@ public class LivroService {
             livroExistente.getAssuntos().addAll(livroDTO.getAssuntos().stream()
                     .map(assuntoDTO -> modelMapper.map(assuntoDTO, Assunto.class))
                     .collect(Collectors.toList()));
-//
-//            // Atualizar a lista de formatos de venda
-//            livroExistente.getFormatosVendas().clear();
-//            livroExistente.getFormatosVendas().addAll(livroDTO.getFormatosVendas().stream()
-//                    .map(vendaDTO -> modelMapper.map(vendaDTO, Venda.class))
-//                    .collect(Collectors.toList()));
 
+            // Atualizar a lista de formatos de venda
+            livroExistente.getFormatosVendas().clear();
+            livroExistente.getFormatosVendas().addAll(livroDTO.getFormatosVendas().stream()
+                    .map(vendaDTO -> modelMapper.map(vendaDTO, Venda.class))
+                    .collect(Collectors.toList()));
 
             Livro livroAtualizado = livroRepository.save(livroExistente);
             return modelMapper.map(livroAtualizado, LivroDTO.class);
