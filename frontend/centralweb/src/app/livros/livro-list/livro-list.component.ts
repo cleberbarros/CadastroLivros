@@ -42,7 +42,7 @@ import { switchMap } from 'rxjs';
 export class LivroListComponent implements OnInit {
   livros: Livro[] = [];
   userInfo: any;
-  userId: number = 0;
+  
   filter: string = '';
   totalLivros = 0;
   pageSize = 12;
@@ -60,11 +60,10 @@ export class LivroListComponent implements OnInit {
     this.authService.getUserInfo().pipe(
       switchMap((userInfo) => {
         this.userInfo = userInfo;
-        this.userId = this.userInfo.id;
         return this.route.paramMap;
       })
     ).subscribe(params => {
-      this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
+      this.loadLivros( this.filter, this.currentPage, this.pageSize);
 
       if (this.userInfo.roles.includes('MANAGER')) {
 
@@ -72,8 +71,8 @@ export class LivroListComponent implements OnInit {
     });
   }
 
-  loadLivros(userId: number, filter: string, page: number, size: number) {
-    this.livroService.getLivrosByUserIdAndPage(userId, filter, page, size).subscribe(response => {
+  loadLivros(filter: string, page: number, size: number) {
+    this.livroService.getLivros(filter, page, size).subscribe(response => {
       this.livros = response.content;
       this.totalLivros = response.totalElements;
       this.cd.detectChanges();
@@ -84,7 +83,7 @@ export class LivroListComponent implements OnInit {
   onFilterChange(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filter = filterValue;
-    this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
+    this.loadLivros(this.filter, this.currentPage, this.pageSize);
   }
 
   openNewLivroModal(): void {
@@ -97,7 +96,7 @@ export class LivroListComponent implements OnInit {
       console.log("Dialog result:", result);
 
       this.route.paramMap.subscribe(params => {
-        this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
+        this.loadLivros(this.filter, this.currentPage, this.pageSize);
       });
     });
 
@@ -116,7 +115,7 @@ export class LivroListComponent implements OnInit {
   onPageChange(event: any) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
+    this.loadLivros(this.filter, this.currentPage, this.pageSize);
   }
 
   handleNewLivro(newLivro: Livro) {
@@ -128,9 +127,6 @@ export class LivroListComponent implements OnInit {
   }
 
 
-
-
-
   editLivro(livro: Livro): void {
 
     const dialogRef = this.dialog.open(LivroCreateComponent, {
@@ -140,7 +136,7 @@ export class LivroListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
+        this.loadLivros( this.filter, this.currentPage, this.pageSize);
       }
     });
   }
@@ -150,7 +146,7 @@ export class LivroListComponent implements OnInit {
       this.livroService.deleteLivro(id).subscribe({
         next: () => {
           this.snackBar.open('Livro excluído com sucesso', 'Close', { duration: 3000 });
-          this.loadLivros(this.userId, this.filter, this.currentPage, this.pageSize);
+          this.loadLivros( this.filter, this.currentPage, this.pageSize);
         },
         error: (error) => {
           console.error('Erro ao excluir livro', error);

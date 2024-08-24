@@ -14,7 +14,7 @@ export class LivroService {
 
   constructor(private http: HttpClient) { }
 
-  getLivrosByUserIdAndPage(userId: number, filter?: string, page: number = 0, size: number = 10): Observable<LivrosResponse> {
+  getLivros(filter?: string, page: number = 0, size: number = 10): Observable<LivrosResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
@@ -38,7 +38,7 @@ export class LivroService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
-    // Novo método para download do relatório em PDF
+    
     downloadLivrosRelatorio(): Observable<Blob> {
       return this.http.get(`${this.apiUrl}/livros-detalhados`, {
         responseType: 'blob',
