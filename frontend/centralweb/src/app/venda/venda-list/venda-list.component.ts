@@ -70,7 +70,7 @@ export class VendaListComponent implements OnInit {
   openNewVendaModal(): void {
     const dialogRef = this.dialog.open(VendaCreateComponent, {
       width: '1000px',
-      height: '200px',
+      
       data: {}
     });
 

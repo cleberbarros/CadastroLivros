@@ -20,6 +20,7 @@
       <mat-card-header>
         <mat-card-title class="cor-fonte">{{ venda.descricao }}</mat-card-title>
         <mat-card-subtitle class="cor-fonte">Autor ID: {{ venda.id }}</mat-card-subtitle>
+        <mat-card-subtitle class="cor-fonte">Valor: {{ venda.valor |  currency:'BRL':'symbol' }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions class="card-actions-end">
         <button mat-icon-button color="warn" (click)="deleteVenda(venda.id); $event.stopPropagation()">

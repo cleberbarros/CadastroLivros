@@ -47,7 +47,8 @@ export class VendaCreateComponent implements OnInit {
   ) {
     this.vendaForm = this.fb.group({
       id: [null],
-      descricao: ['', Validators.required]
+      descricao: ['', Validators.required],
+      valor:[0]
     });
   }
 
@@ -66,6 +67,13 @@ export class VendaCreateComponent implements OnInit {
       return 'Descrição é obrigatório';
     }
     return '';
+  }
+
+  onValorChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const numericValue = parseFloat(inputElement.value.replace(/[^0-9,.]/g, '').replace(',', '.'));
+
+    this.vendaForm.get('valor')?.setValue(numericValue, { emitEvent: false });
   }
 
   onSubmit() {

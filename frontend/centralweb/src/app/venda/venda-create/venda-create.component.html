@@ -5,6 +5,16 @@
     <input matInput formControlName="descricao">
     <mat-error *ngIf="descricao?.invalid">{{ getDescricaoErrorMessage() }}</mat-error>
   </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Valor</mat-label>
+    <input 
+      matInput 
+      formControlName="valor" 
+      [value]="vendaForm.get('valor')?.value | currency:'BRL':'symbol':'1.2-2'"
+      (input)="onValorChange($event)">
+  </mat-form-field>
+
   <div class="form-buttons">
     <button mat-button mat-dialog-close>Cancelar</button>
     <button mat-raised-button color="primary" [disabled]="vendaForm.invalid">Salvar</button>
