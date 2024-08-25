@@ -1,0 +1,40 @@
+<mat-toolbar color="primary" class="toolbar-search">
+    <div class="balance-container"></div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Pesquise por ID ou Descricao</mat-label>
+        <input matInput [(ngModel)]="filter" (keyup)="onFilterChange($event)">
+        <mat-icon color="primary" matSuffix>buscar</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="new-venda-btn-container">
+      <button mat-raised-button class="new-venda-btn" (click)="openNewVendaModal()">
+        <mat-icon>add_circle_outline</mat-icon>
+        Novo Formato Venda
+      </button>
+    </div>
+  </mat-toolbar>
+  
+  <div class="venda-list" *ngIf="vendas.length > 0; else noVendas">
+    <mat-card class="venda-card" *ngFor="let venda of vendas" (click)="openVendaDetails(venda)">
+      <mat-card-header>
+        <mat-card-title class="cor-fonte">{{ venda.descricao }}</mat-card-title>
+        <mat-card-subtitle class="cor-fonte">Autor ID: {{ venda.id }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions class="card-actions-end">
+        <button mat-icon-button color="warn" (click)="deleteVenda(venda.id); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
+  <div class="pagination">
+    <mat-paginator [length]="totalVendas" [pageSize]="12" [pageSizeOptions]="[8, 12, 24]" (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+  
+  <ng-template #noVendas>
+    <h1 class="no-vendas">Você ainda não tem Formatos de Vendas.</h1>
+  </ng-template>
+  

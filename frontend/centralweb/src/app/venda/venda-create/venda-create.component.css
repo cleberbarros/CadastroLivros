@@ -1,0 +1,28 @@
+/* Segue a mesma estrutura do CSS de livro-create */
+.dialog-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #1e88e5;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .form-buttons button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+  
+  mat-error {
+    color: red;
+  }
+  

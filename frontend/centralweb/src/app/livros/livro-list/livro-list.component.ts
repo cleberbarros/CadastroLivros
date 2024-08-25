@@ -21,6 +21,8 @@ import { AuthService } from '../../shared/services/auth.service';
 import { switchMap } from 'rxjs';
 import { AssuntoListComponent } from '../../assunto/assunto-list/assunto-list.component';
 import { AutorListComponent } from '../../autor/autor-list/autor-list.component';
+import { VendaListComponent } from '../../venda/venda-list/venda-list.component';
+
 
 @Component({
   standalone: true,
@@ -113,6 +115,14 @@ export class LivroListComponent implements OnInit {
 
   openAutoresModal():void{
     const dialogRef = this.dialog.open(AutorListComponent, {
+      width: '1000px',
+      height: '700px'
+      
+    });
+  }
+
+  openVendasModal():void{
+    const dialogRef = this.dialog.open(VendaListComponent, {
       width: '1000px',
       height: '700px'
       
