@@ -1,12 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AssuntoService } from '../../shared/services/assunto.service';
+import { AutorService } from '../../shared/services/autor.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { LivroService } from '../../shared/services/livro.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
@@ -36,46 +35,46 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AutorCreateComponent implements OnInit {
-  assuntoForm: FormGroup;
+  autorForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private assuntoService: AssuntoService,
+    private autorService:AutorService,
     public dialogRef: MatDialogRef<AutorCreateComponent>,
     private snackBar: MatSnackBar,
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.assuntoForm = this.fb.group({
+    this.autorForm = this.fb.group({
       id: [null],
-      descricao: ['', Validators.required]
+      nome: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     if (this.data && this.data.id) {
-      this.assuntoForm.patchValue(this.data);
+      this.autorForm.patchValue(this.data);
     }
   }
 
   get descricao() {
-    return this.assuntoForm.get('descricao');
+    return this.autorForm.get('nome');
   }
 
   getDescricaoErrorMessage() {
     if (this.descricao?.hasError('required')) {
-      return 'Descrição é obrigatória';
+      return 'Nome é obrigatório';
     }
     return '';
   }
 
   onSubmit() {
-    if (this.assuntoForm.valid) {
-      const assunto = this.assuntoForm.value;
-      if (assunto.id) {
-        this.assuntoService.updateAssunto(assunto).subscribe({
+    if (this.autorForm.valid) {
+      const autor = this.autorForm.value;
+      if (autor.id) {
+        this.autorService.updateAutor(autor).subscribe({
           next: () => {
-            this.snackBar.open('Assunto atualizado com sucesso', 'Fechar', { duration: 3000 });
+            this.snackBar.open('Autor atualizado com sucesso', 'Fechar', { duration: 3000 });
             this.dialogRef.close(true);
           },
           error: () => {
@@ -83,9 +82,9 @@ export class AutorCreateComponent implements OnInit {
           }
         });
       } else {
-        this.assuntoService.createAssunto(assunto).subscribe({
+        this.autorService.createAutor(autor).subscribe({
           next: () => {
-            this.snackBar.open('Assunto criado com sucesso', 'Fechar', { duration: 3000 });
+            this.snackBar.open('Autor criado com sucesso', 'Fechar', { duration: 3000 });
             this.dialogRef.close(true);
           },
           error: () => {
