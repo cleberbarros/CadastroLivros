@@ -24,8 +24,8 @@ CREATE TABLE Autor (
 );
 
 CREATE TABLE Livro_Autor (
-    livro_codl Integer NOT NULL,
-    autor_codau Integer NOT NULL,
+    livro_codl BIGINT NOT NULL,
+    autor_codau BIGINT NOT NULL,
     FOREIGN KEY (livro_codl) REFERENCES Livro (codl),
     FOREIGN KEY (autor_codau) REFERENCES Autor (codau)
 );
@@ -36,8 +36,8 @@ CREATE TABLE Assunto (
 );
 
 CREATE TABLE Livro_Assunto (
-    livro_codl Integer NOT NULL,
-    assunto_codas Integer NOT NULL,
+    livro_codl BIGINT NOT NULL,
+    assunto_codas BIGINT NOT NULL,
     FOREIGN KEY (livro_codl) REFERENCES Livro (codl),
     FOREIGN KEY (assunto_codas) REFERENCES Assunto (codas)
 );
@@ -49,40 +49,11 @@ CREATE TABLE Venda (
 );
 
 CREATE TABLE Livro_Venda (
-    livro_codl Integer NOT NULL,
-    venda_codve Integer NOT NULL,
+    livro_codl BIGINT NOT NULL,
+    venda_codve BIGINT NOT NULL,
     FOREIGN KEY (livro_codl) REFERENCES Livro (codl),
     FOREIGN KEY (venda_codve) REFERENCES Venda (codve)
 );
-
---view para relatorio
-CREATE OR REPLACE VIEW vw_livros_detalhes AS
-SELECT 
-    l.codl AS livro_id,
-    l.titulo AS livro_titulo,
-    l.editora AS livro_editora,
-    l.edicao AS livro_edicao,
-    l.anopublicacao AS livro_anopublicacao,
-    COALESCE(STRING_AGG(DISTINCT a.nome, ', '), 'Sem Autor') AS autores,
-    COALESCE(STRING_AGG(DISTINCT ass.descricao, ', '), 'Sem Assunto') AS assuntos,
-    COALESCE(STRING_AGG(DISTINCT v.descricao || ' (R$' || v.valor || ')', ', '), 'Sem Venda') AS vendas
-FROM 
-    Livro l
-LEFT JOIN 
-    Livro_Autor la ON l.codl = la.livro_codl
-LEFT JOIN 
-    Autor a ON la.autor_codau = a.codau
-LEFT JOIN 
-    Livro_Assunto las ON l.codl = las.livro_codl
-LEFT JOIN 
-    Assunto ass ON las.assunto_codas = ass.codas
-LEFT JOIN 
-    Livro_Venda lv ON l.codl = lv.livro_codl
-LEFT JOIN 
-    Venda v ON lv.venda_codve = v.codve
-GROUP BY 
-    l.codl, l.titulo, l.editora, l.edicao, l.anopublicacao;
-
 
 
 -- Inserir usuários
@@ -123,4 +94,32 @@ INSERT INTO Livro_Assunto (Livro_Codl, Assunto_CodAs) VALUES (2, 2); -- A Guerra
 INSERT INTO Livro_Venda (Livro_Codl, Venda_CodVe) VALUES (1, 1); -- O Senhor dos Anéis - Impresso
 INSERT INTO Livro_Venda (Livro_Codl, Venda_CodVe) VALUES (2, 2); -- A Guerra dos Tronos - E-book
 
- 
+
+
+--view para relatorio
+CREATE OR REPLACE VIEW vw_livros_detalhes AS
+SELECT 
+    l.codl AS livro_id,
+    l.titulo AS livro_titulo,
+    l.editora AS livro_editora,
+    l.edicao AS livro_edicao,
+    l.anopublicacao AS livro_anopublicacao,
+    COALESCE(STRING_AGG(DISTINCT a.nome, ', '), 'Sem Autor') AS autores,
+    COALESCE(STRING_AGG(DISTINCT ass.descricao, ', '), 'Sem Assunto') AS assuntos,
+    COALESCE(STRING_AGG(DISTINCT v.descricao || ' (R$' || v.valor || ')', ', '), 'Sem Venda') AS vendas
+FROM 
+    Livro l
+LEFT JOIN 
+    Livro_Autor la ON l.codl = la.livro_codl
+LEFT JOIN 
+    Autor a ON la.autor_codau = a.codau
+LEFT JOIN 
+    Livro_Assunto las ON l.codl = las.livro_codl
+LEFT JOIN 
+    Assunto ass ON las.assunto_codas = ass.codas
+LEFT JOIN 
+    Livro_Venda lv ON l.codl = lv.livro_codl
+LEFT JOIN 
+    Venda v ON lv.venda_codve = v.codve
+GROUP BY 
+    l.codl, l.titulo, l.editora, l.edicao, l.anopublicacao;

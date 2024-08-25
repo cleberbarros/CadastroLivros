@@ -49,7 +49,7 @@ public class Livro {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "livro_venda",
+            name = "Livro_Venda",
             joinColumns = @JoinColumn(name = "livro_codl"),
             inverseJoinColumns = @JoinColumn(name = "venda_codve")
     )
