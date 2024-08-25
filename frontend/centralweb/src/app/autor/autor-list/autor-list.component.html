@@ -1,0 +1,40 @@
+<mat-toolbar color="primary" class="toolbar-search">
+    <div class="balance-container"></div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Pesquise por ID ou Nome</mat-label>
+        <input matInput [(ngModel)]="filter" (keyup)="onFilterChange($event)">
+        <mat-icon color="primary" matSuffix>buscar</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="new-autor-btn-container">
+      <button mat-raised-button class="new-autor-btn" (click)="openNewAutorModal()">
+        <mat-icon>add_circle_outline</mat-icon>
+        Novo Autor
+      </button>
+    </div>
+  </mat-toolbar>
+  
+  <div class="autor-list" *ngIf="autores.length > 0; else noAutores">
+    <mat-card class="autor-card" *ngFor="let autor of autores" (click)="openAutorDetails(autor)">
+      <mat-card-header>
+        <mat-card-title class="cor-fonte">{{ autor.nome }}</mat-card-title>
+        <mat-card-subtitle class="cor-fonte">Autor ID: {{ autor.id }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions class="card-actions-end">
+        <button mat-icon-button color="warn" (click)="deleteAutor(autor.id); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
+  <div class="pagination">
+    <mat-paginator [length]="totalAutores" [pageSize]="12" [pageSizeOptions]="[8, 12, 24]" (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+  
+  <ng-template #noAutores>
+    <h1 class="no-autores">Você ainda não tem Autores.</h1>
+  </ng-template>
+  

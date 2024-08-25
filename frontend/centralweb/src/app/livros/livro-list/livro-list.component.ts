@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../shared/services/auth.service';
 import { switchMap } from 'rxjs';
 import { AssuntoListComponent } from '../../assunto/assunto-list/assunto-list.component';
+import { AutorListComponent } from '../../autor/autor-list/autor-list.component';
 
 @Component({
   standalone: true,
@@ -104,6 +105,14 @@ export class LivroListComponent implements OnInit {
 
   openAssuntosModal():void{
     const dialogRef = this.dialog.open(AssuntoListComponent, {
+      width: '1000px',
+      height: '700px'
+      
+    });
+  }
+
+  openAutoresModal():void{
+    const dialogRef = this.dialog.open(AutorListComponent, {
       width: '1000px',
       height: '700px'
       
